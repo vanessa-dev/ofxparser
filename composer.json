@@ -19,6 +19,7 @@
             "email": "mrtriangle@gmail.com"
         }
     ],
+    "minimum-stability": "stable",
     "require": {
         "php": ">=5.4"
     },
