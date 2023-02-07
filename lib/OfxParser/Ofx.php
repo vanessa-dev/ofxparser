@@ -171,6 +171,7 @@ class Ofx
      * YYYYMMDDHHMMSS.XXX
      * YYYYMMDDHHMMSS
      * YYYYMMDD
+     * YYYY-MM-DD
      *
      * @param  string  $dateString
      * @param  boolean $ignoreErrors
@@ -179,7 +180,7 @@ class Ofx
     private function createDateTimeFromStr($dateString, $ignoreErrors = false)
     {
         $regex = "/"
-            . "(\d{4})(\d{2})(\d{2})?" // YYYYMMDD             1,2,3
+            . "(\d{4})[-]?(\d{2})[-]?(\d{2})?" // YYYYMMDD   YYYY-MM-DD          1,2,3
             . "(?:(\d{2})(\d{2})(\d{2}))?" // HHMMSS   - optional  4,5,6
             . "(?:\.(\d{3}))?" // .XXX     - optional  7
             . "(?:\[(-?\d+)\:(\w{3}\]))?" // [-n:TZ]  - optional  8,9
