@@ -42,17 +42,22 @@ class Parser
 	 */
 	public function loadFromString($ofxContent)
 	{
-		$ofxContent = utf8_encode($ofxContent);
+        $ofxContent = utf8_encode($ofxContent);
 
 		$sgmlStart = stripos($ofxContent, '<OFX>');
 		$ofxHeader = trim(substr($ofxContent, 0, $sgmlStart));
 		$ofxSgml = trim(substr($ofxContent, $sgmlStart));
 
-		$ofxXml = $this->convertSgmlToXml($ofxSgml);
+		// IF THERE IS A CHARACTER & WHICH CAUSES THE FILE TO BE INVALID, IT REPLACES
+      $ofxSgml = str_replace('&', '', $ofxSgml);
 
+		// WHEN TYPE IS EMPTY Wiil BE FILL WITH OTHER
+		$enR = str_replace("<TRNTYPE> ", "<TRNTYPE>OTHER", $ofxSgml);
+		
+		$ofxXml = $this->convertSgmlToXml($enR);
 		$xml = $this->xmlLoadString($ofxXml);
 
-		return new Ofx($xml);
+		return new \OfxParser\Ofx($xml);
 	}
 
 	/**
