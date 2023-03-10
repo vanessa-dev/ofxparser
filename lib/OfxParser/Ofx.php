@@ -123,7 +123,7 @@ class Ofx
         $Bank->routingNumber = $xml->STMTRS->BANKACCTFROM->BANKID;
         $Bank->accountType = $xml->STMTRS->BANKACCTFROM->ACCTTYPE;
         $Bank->balance = $xml->STMTRS->LEDGERBAL->BALAMT;
-        $Bank->balanceDate = $this->createDateTimeFromStr($xml->STMTRS->LEDGERBAL->DTASOF, true);
+        $Bank->balanceDate = $xml->STMTRS->LEDGERBAL->DTASOF ?$this->createDateTimeFromStr($xml->STMTRS->LEDGERBAL->DTASOF, true) : '';
 
         $Bank->Statement = new Statement();
         $Bank->Statement->currency = $xml->STMTRS->CURDEF;
