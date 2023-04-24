@@ -42,7 +42,8 @@ class Parser
 	 */
 	public function loadFromString($ofxContent)
 	{
-        $ofxContent = utf8_encode($ofxContent);
+		$ofxEncoding = mb_detect_encoding($ofxContent);
+		$ofxContent = mb_convert_encoding($ofxContent, "UTF-8", $ofxEncoding);
 
 		$sgmlStart = stripos($ofxContent, '<OFX>');
 		$ofxHeader = trim(substr($ofxContent, 0, $sgmlStart));
