@@ -179,37 +179,20 @@ class Ofx
      */
     private function createDateTimeFromStr($dateString, $ignoreErrors = false)
     {
-        $regex = "/"
-            . "(\d{4})[-]?(\d{2})[-]?(\d{2})?" // YYYYMMDD   YYYY-MM-DD          1,2,3
-            . "(?:(\d{2})(\d{2})(\d{2}))?" // HHMMSS   - optional  4,5,6
-            . "(?:\.(\d{3}))?" // .XXX     - optional  7
-            . "(?:\[(-?\d+)\:(\w{3}\]))?" // [-n:TZ]  - optional  8,9
-            . "/";
+      
+        $format = $this->formatDate($dateString);
+        try {
+            return new \DateTime($format);
 
-        if (preg_match($regex, $dateString, $matches)) {
-            $year = (int)$matches[1];
-            $month = (int)$matches[2];
-            $day = (int)$matches[3];
-            $hour = isset($matches[4]) ? $matches[4] : 0;
-            $min = isset($matches[5]) ? $matches[5] : 0;
-            $sec = isset($matches[6]) ? $matches[6] : 0;
+        } catch (\Exception $e) {
 
-            $format = $year . '-' . $month . '-' . $day . ' ' . $hour . ':' . $min . ':' . $sec;
-
-            try {
-                return new \DateTime($format);
-
-            } catch (\Exception $e) {
-
-                if ($ignoreErrors) {
-                    return null;
-                }
-
-                throw $e;
+            if ($ignoreErrors) {
+                return null;
             }
-        }
 
-        throw new \Exception("Failed to initialize DateTime for string: " . $dateString);
+            throw $e;
+        }
+       
     }
 
     /**
@@ -251,4 +234,60 @@ class Ofx
         return (float)$amountString;
     }
 
+    /**
+     *  Format Date for create date 
+     *
+     * Supports:
+     * YYYYMMDDHHMMSS.XXX[gmt offset:tz name]
+     * YYYYMMDDHHMMSS.XXX
+     * YYYYMMDDHHMMSS
+     * YYYYMMDD
+     * YYYY-MM-DD
+     * 
+     * dd/mm/aaaa
+     *
+     * 
+     * @param string $date
+     * @return string
+     */
+    private function formatDate($date) {
+     
+        $regex_format_american = "/"
+        . "(\d{4})[-]?(\d{2})[-]?(\d{2})?" // YYYYMMDD   YYYY-MM-DD          1,2,3
+        . "(?:(\d{2})(\d{2})(\d{2}))?" // HHMMSS   - optional  4,5,6
+        . "(?:\.(\d{3}))?" // .XXX     - optional  7
+        . "(?:\[(-?\d+)\:(\w{3}\]))?" // [-n:TZ]  - optional  8,9
+        . "/";
+
+        $regex_format_brazilian = "/"
+        . "(\d{2})\/(\d{2})\/(\d{4})?" //    dd/mm/aaaa   1,2,3
+        . "(?:(\d{2})(\d{2})(\d{2}))?" // HHMMSS   - optional  4,5,6
+        . "(?:\.(\d{3}))?" // .XXX     - optional  7
+        . "(?:\[(-?\d+)\:(\w{3}\]))?" // [-n:TZ]  - optional  8,9
+        . "/";
+
+        if (preg_match($regex_format_american, $date, $matches)) {
+            $year = (int)$matches[1];
+            $month = (int)$matches[2];
+            $day = (int)$matches[3];
+            $hour = isset($matches[4]) ? $matches[4] : 0;
+            $min = isset($matches[5]) ? $matches[5] : 0;
+            $sec = isset($matches[6]) ? $matches[6] : 0;
+            $format = $year . '-' . $month . '-' . $day . ' ' . $hour . ':' . $min . ':' . $sec;
+            return $format;  
+
+        } else if (preg_match($regex_format_brazilian, $date, $matches)) {
+            $day = (int)$matches[1];
+            $month = (int)$matches[2];
+            $year = (int)$matches[3];
+            $hour = isset($matches[4]) ? $matches[4] : 0;
+            $min = isset($matches[5]) ? $matches[5] : 0;
+            $sec = isset($matches[6]) ? $matches[6] : 0;
+            $format = $year . '-' . $month . '-' . $day . ' ' . $hour . ':' . $min . ':' . $sec;
+            return $format;
+        }
+
+        throw new \Exception("Failed to initialize DateTime for string: " . $date);
+
+    }
 }
