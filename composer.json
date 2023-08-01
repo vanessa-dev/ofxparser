@@ -19,6 +19,13 @@
             "email": "mrtriangle@gmail.com"
         }
     ],
+    "contribuitors": [
+        {
+            "name": "Vanessa Santana",
+            "linkedin": "https://www.linkedin.com/in/vanessa-dev/",
+            "homepage": "https://www.nessajs.com.br/"
+        }
+    ],
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.4"
