@@ -17,13 +17,14 @@ class Parser
 	/**
 	 * Load an OFX file into this parser by way of a filename
 	 *
-	 * @param string $ofxFile A path that can be loaded with file_get_contents
+	 * @param string $ofxFile A path or an url that can be loaded with file_get_contents
 	 * @return  Ofx
 	 * @throws \InvalidArgumentException
 	 */
 	public function loadFromFile($ofxFile)
 	{
-		if (file_exists($ofxFile))
+		$url = str_contains($ofxFile, 'http');
+		if (file_exists($ofxFile) || $url)
 		{
 			return $this->loadFromString(file_get_contents($ofxFile));
 		}
