@@ -23,7 +23,7 @@ class Parser
 	 */
 	public function loadFromFile($ofxFile)
 	{
-		$url = str_contains($ofxFile, 'http');
+		$url = strpos($ofxFile, 'http');
 		if (file_exists($ofxFile) || $url)
 		{
 			return $this->loadFromString(file_get_contents($ofxFile));
